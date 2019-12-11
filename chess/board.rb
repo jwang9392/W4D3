@@ -1,4 +1,5 @@
-require_relative "piece.rb"
+require_relative "./pieces/piece.rb"
+require_relative "./pieces/knight.rb"
 
 class Board
 
@@ -10,68 +11,72 @@ class Board
     end
 
     def [](pos)
-        self[pos.first][pos.last]
+        @grid[pos.first][pos.last]
     end
 
     def []=(pos, value)
-        self[pos.first][pos.last] = value
+        @grid[pos.first][pos.last] = value
     end
 
 # if no piece at start position
-#  
+#  must be a piece at start position
 
 # the piece cannot move to end
 #  end_pos is not on grid == idx of row or col !(0..7)
 
     def move_piece(start_pos, end_pos)
 
-        raise "No piece at this position" if grid[start_pos.first][start_pos.last] == nil 
+        raise "No piece at this position" if self[start_pos] == nil 
         
-        raise "The piece cannot move to this position" unless (0..7).include?(end_pos.first) && (0..7).include?(end_pos.last)
+        raise "The piece cannot move to this position" unless (0..7).include?(end_pos.first) && (0..7).include?(end_pos.last) #make helper for the logic
 
-        piece = @grid[start_pos.first][start_pos.last]
-        @grid[end_pos.first][end_pos.last] = piece
-        @grid[start_pos.first][start_pos.last] = nil
+        piece = self[start_pos] #@grid[start_pos.first][start_pos.last]
+       self[end_pos] = piece
+       self[start_pos] = nil
 
         piece.pos = end_pos
 
     end
 
-    def add_piece(piece, pos)
-        @grid[pos.first][pos.last] = Piece.new(piece, pos)
+    def add_piece(color, pos)
+        self[pos] = Knight.new(color, @grid, pos)
+        #@grid[pos.first][pos.last] = Piece.new(piece, pos)
+        
     end
 
     def render
-        @grid.each do |row|
+        p "  0 1 2 3 4 5 6 7"
+        @grid.each_with_index do |row, i|
             converted = row.map do |ele|
                 if ele == nil
                     "_"
                 else
-                    ele.symbol
+                    ele.color
                 end
             end
 
-            p converted.join(" ")
+            p i.to_s + " " + converted.join(" ")
         end
     end
 end
 
+
 if __FILE__ == $PROGRAM_NAME
 
     b = Board.new
-    b.add_piece(:x, [0,0])
-    b.add_piece(:v, [0,1])
-    b.add_piece(:C, [5,7])
-    b.render
-puts " --"
-    p b.grid[0][0]
-puts " --"
-    b.move_piece([0,0], [0,5])
-    b.render
-puts " --"
-    p b.grid[0][5]
+    b.add_piece(:w, [4,3])
+    b.add_piece(:b, [2,3])
+    b.add_piece(:w, [7,3])
+    b.add_piece(:b, [4,2])
+    b.add_piece(:w, [4,6])
+    b.add_piece(:w, [2,1])
+    b.add_piece(:b, [2,5])
+    b.add_piece(:w, [7,6])
+    b.add_piece(:b, [6,1])
+    b.add_piece(:w, [2,2])
 
-    # b.move_piece([0,5], [-1, 10])
-    # b.move_piece([0,3], [1, 0])
+    b.render
+    p b.grid[4][3].moves
+puts " --"
 
 end

@@ -1,0 +1,30 @@
+Piece Parent class
+- contains functionality of ALL our pieces. 
+- utilizes move method
+- will be inherited by all different types of pieces
+
+    -hold reference to current state of the board
+    -track position of that piece
+
+In order to get different types of pieces
+- create modules to separate different characteristics 
+ 1. Slideable - move multiple spaces in a single turn
+    - implement #move_dirs, which will be used by #moves
+    
+ 2. Stepable - set moving pattern for that piece
+
+ 3. NullPiece - singleton
+
+Finally, make pawn class
+
+REFACTOR
+
+
+subclass < class
+knight < piece
+superuser=subclass(takes in all attributes of user) < user=class
+Of course, every piece will move differently, so you can't write 
+(implement) the #moves method of Piece without subclasses.
+- if we are creating a class that we know has specific subclasses, 
+    we create subclasses first, because classes need to work consistently
+    in all subclasses
